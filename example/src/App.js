@@ -1,12 +1,13 @@
-import React, { Component } from 'react'
-
-import ExampleComponent from 'audios'
+import React, { Component } from 'react';
+import PlayButton from './PlayButton';
+import Transport from './Transport';
 
 export default class App extends Component {
   render () {
     return (
       <div>
-        <ExampleComponent text='Modern React component module' />
+        <PlayButton url="http://api.sound.farm/v1/test/mp3" />
+        <Transport />
       </div>
     )
   }

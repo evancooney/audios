@@ -1,6 +1,6 @@
 {
   "name": "audios",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Stateful react components for audio playback on the web",
   "author": "evancooney",
   "license": "MIT",
@@ -34,6 +34,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "cross-env": "^5.1.4",
+    "datauri": "^1.1.0",
     "eslint": "^5.0.1",
     "eslint-config-standard": "^11.0.0",
     "eslint-config-standard-react": "^6.0.0",
@@ -52,9 +53,15 @@
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-plugin-peer-deps-external": "^2.2.0",
     "rollup-plugin-postcss": "^1.6.2",
-    "rollup-plugin-url": "^1.4.0"
+    "rollup-plugin-url": "^1.4.0",
+    "sinon": "^6.3.4",
+    "web-audio-test-api": "^0.5.2"
   },
   "files": [
     "dist"
-  ]
+  ],
+  "dependencies": {
+    "howler": "^2.0.15",
+    "unstated": "^2.1.1"
+  }
 }
