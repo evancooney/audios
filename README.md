@@ -67,7 +67,7 @@ volume: number
 isLoading: boolean
 isPlaying: boolean
 isError: boolean
-html5: boolean
+html5: boolean 
 
 Methods
 --------
