@@ -56,7 +56,7 @@ export default withAudios(PlayButton);
 
 State Variables
 --------
-Accessible from via props.audios.state in the withAudio HOC
+Accessible from props.audios.state in the withAudio HOC
 
 url: string
 filename: string
@@ -67,7 +67,7 @@ volume: number
 isLoading: boolean
 isPlaying: boolean
 isError: boolean
-html5: boolean 
+html5: boolean
 
 Methods
 --------

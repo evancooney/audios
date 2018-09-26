@@ -4,7 +4,7 @@ import { Provider } from 'unstated';
 
 export default class Audios extends Component {
   static propTypes = {
-    children: PropTypes.array
+    children: PropTypes.node
   }
 
   render() {

@@ -21,20 +21,7 @@ const buffer3 = fs.readFileSync(path.resolve(__dirname, 'testmedia', 'test-audio
 datauri.format('.ogg', buffer3);
 const OGGaudio64uri = datauri.content;
 
-const audiofile = {
-  id: 1,
-  _id: 1,
-  mp3: MP3audio64uri,
-  flac: FLACaudio64uri,
-  ogg: OGGaudio64uri,
-  originalFile: {
-    filename: 'My Cool Audio.wav',
-    metadata: {
-      duration: 34,
-    },
-  },
-
-};
+const url = 'http://someurl.com'
 
 describe('PlayerContainer', () => {
   let ac;
@@ -43,8 +30,6 @@ describe('PlayerContainer', () => {
   beforeEach(() => {
     ac = new AudiosContainer(false);
     sandbox = sinon.createSandbox();
-
-    sandbox.stub(ac, 'buildURL').callsFake(format => audiofile[format]);
 
     Howler.codecs = jest.fn().mockReturnValue({
       mp3: true,
@@ -74,7 +59,7 @@ describe('PlayerContainer', () => {
 
   describe('LOAD', () => {
     it('should load a base 64 audio URI', (done) => {
-      ac.loadSound(audiofile, 'fakeToken').then(() => {
+      ac.loadSound(MP3audio64uri).then(() => {
         expect(ac.state.sound.state()).to.equal('loaded');
         done();
       }).catch((reason) => {
@@ -85,29 +70,19 @@ describe('PlayerContainer', () => {
 
     it('should play a file when sound is LOADED without loading sound', (done) => {
       ac.state.audiofileId = 1; // simulates a loaded file
-      ac.loadSound(audiofile, 'fakeToken').then(() => {
+      ac.loadSound(MP3audio64uri).then(() => {
         const spy = sinon.spy(ac, 'loadSound');
-        ac.play(audiofile, 'fakeToken').then(() => {
+        ac.play(MP3audio64uri).then(() => {
           expect(spy).to.have.property('callCount', 0);
           done();
         });
-      });
-    }, 1000);
-
-    it('should load a url via string', (done) => {
-      ac.loadSound('https://api.sound.farm/test/mp3', 'fakeToken').then(() => {
-        expect(ac.state.sound.state()).to.equal('loaded');
-        done();
-      }).catch((reason) => {
-        console.log('The reason is you', reason);
-        done();
       });
     }, 1000);
   });
 
   it('should play a file when sound is unloaded', (done) => {
     ac.seek = sandbox.stub();
-    ac.play(audiofile, 'fakeToken').then(() => {
+    ac.play(OGGaudio64uri).then(() => {
       expect(ac.seek).to.have.property('callCount', 1);
       expect(ac.state.url).to.equal(OGGaudio64uri);
       done();
@@ -117,7 +92,7 @@ describe('PlayerContainer', () => {
   it('should play an MP3 file when OGG isnt supported', (done) => {
     ac.state.format = 'mp3';
     ac.seek = sandbox.stub();
-    ac.play(audiofile, 'fakeToken').then(() => {
+    ac.play(MP3audio64uri).then(() => {
       expect(ac.seek).to.have.property('callCount', 1);
       expect(ac.state.url).to.equal(MP3audio64uri);
       done();
@@ -125,7 +100,7 @@ describe('PlayerContainer', () => {
   }, 1000);
 
   it('should seek to a position', (done) => {
-    ac.play(audiofile, 'fakeToken', 5).then(() => {
+    ac.play(OGGaudio64uri, 5).then(() => {
       expect(ac.state.url).to.equal(OGGaudio64uri);
       expect(ac.state.currentTime).to.equal(5);
       done();
@@ -134,10 +109,10 @@ describe('PlayerContainer', () => {
 
   it('should set state of additional params', (done) => {
     ac.seek = sandbox.stub();
-    ac.play(audiofile, 'fakeToken').then(() => {
-      expect(ac.state.url).to.have.equal(audiofile.ogg);
-      expect(ac.state.filename).to.have.equal(audiofile.originalFile.filename);
-      expect(ac.state.audiofileId).to.have.equal(audiofile.id);
+    ac.play(OGGaudio64uri, 0, 'filename', '123').then(() => {
+      expect(ac.state.url).to.have.equal(OGGaudio64uri);
+      expect(ac.state.filename).to.have.equal('filename');
+      expect(ac.state.audiofileId).to.have.equal('123');
       done();
     });
   }, 1000);

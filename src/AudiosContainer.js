@@ -4,7 +4,6 @@ import { Howl, Howler } from 'howler';
 type AudiosState = {
   url: string,
   filename: string,
-  audiofile: Object,
   audiofileId: string,
   currentTime: number,
   currentTimeAsPercentage: number,
@@ -17,7 +16,6 @@ type AudiosState = {
   errorMessage: string,
   html5: boolean,
   format: string,
-  soundFarmToken: string,
 };
 
 class AudiosContainer extends Container<AudiosState> {
@@ -25,7 +23,6 @@ class AudiosContainer extends Container<AudiosState> {
     url: '',
     filename: '',
     audiofileId: '',
-    audiofile: undefined,
     currentTime: 0,
     currentTimeAsPercentage: 0,
     duration: 0,
@@ -37,8 +34,6 @@ class AudiosContainer extends Container<AudiosState> {
     sound: undefined,
     progressFunc: undefined,
     html5: true,
-    format: 'ogg',
-    soundFarmToken: ''
   }
 
   constructor(html5 = true) {
@@ -51,27 +46,11 @@ class AudiosContainer extends Container<AudiosState> {
     }
   }
 
-  buildURL = (format, audiofile, token) => {
-    if (typeof audiofile === 'string' || !token) {
-      return audiofile;
-    }
-    const baseURL = process.env.REACT_APP_API_BASE;
-    const urls = {
-      'flac': `${baseURL}/transcodes/flac/${audiofile._id}`,
-      'ogg': `${baseURL}/transcodes/ogg/${audiofile._id}`,
-      'mp3': `${baseURL}/transcodes/mp3/320k/${audiofile._id}`,
-    };
-    return urls[format];
-  }
-
-   loadSound = (audiofile, token) => (
+   loadSound = (url) => (
      new Promise((resolve, reject) => {
-       const url = this.buildURL(this.state.format, audiofile, token);
-       const source = token && token !== 'fakeToken' ? `${url}?token=${token}` : url;
-
        this.setState({ isLoading: true, url });
        const sound = new Howl({
-         src: [source],
+         src: [url],
          format: this.state.format,
          autoplay: false,
          html5: this.state.html5,
@@ -86,7 +65,6 @@ class AudiosContainer extends Container<AudiosState> {
              sound,
              url,
              duration: sound.duration(),
-             audiofile,
              isLoading: false,
            }, () => {
              resolve(sound);
@@ -149,7 +127,7 @@ class AudiosContainer extends Container<AudiosState> {
     this.setState({ isPlaying: false });
   }
 
-  play = (audiofile, soundFarmToken, position = 0) => {
+  play = (url, position = 0, filename, audiofileId) => {
     // private playback function
     this._play = (callback, position) => {
       this.seek(position);
@@ -159,16 +137,16 @@ class AudiosContainer extends Container<AudiosState> {
       this.setState({
         isPlaying: true,
         current: position,
-        filename: typeof audiofile === 'object' ? audiofile.originalFile.filename : audiofile,
-        audiofileId: typeof audiofile === 'object' ? audiofile.id : audiofile,
+        filename,
+        audiofileId,
       });
       callback();
     };
 
     return new Promise((resolve, reject) => {
-      if (this.state.sound === undefined || this.state.audiofileId !== audiofile.id) {
+      if (this.state.sound === undefined || this.state.url !== url) {
         this.unloadSound().then(() => {
-          this.loadSound(audiofile, soundFarmToken).then(() => {
+          this.loadSound(url).then(() => {
             this._play(resolve, position);
           }).catch((id, error) => {
             console.log(id, error);
