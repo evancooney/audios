@@ -2,9 +2,6 @@
 
 > Stateful audio playback for React
 
-NOTE: This module is being used in production but is still experimental and may
-change significantly
-
 Features
 --------
 * Play / load audio from any component
@@ -60,6 +57,7 @@ Accessible from props.audios.state in the withAudio HOC
 
 url: string
 filename: string
+audiofileId: string
 currentTime: number
 currentTimeAsPercentage: number
 duration: number
@@ -73,7 +71,7 @@ Methods
 --------
 Accessible from via props.audios in the withAudio HOC
 
-play(url)
+play(url, position = 0, optionalFilename, optionalAudiofileId)
 
 pause()
 
