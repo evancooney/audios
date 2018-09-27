@@ -127,6 +127,11 @@ class AudiosContainer extends Container<AudiosState> {
     this.setState({ isPlaying: false });
   }
 
+  resume = () => {
+    this.state.sound.play();
+    this.setState({ isPlaying: true });
+  }
+
   play = (url, position = 0, filename, audiofileId) => {
     // private playback function
     this._play = (callback, position) => {
@@ -150,7 +155,7 @@ class AudiosContainer extends Container<AudiosState> {
             this._play(resolve, position);
           }).catch((id, error) => {
             console.log(id, error);
-            reject('could not load sound');
+            reject(new Error('could not load sound'));
           });
         });
       } else {
@@ -171,6 +176,12 @@ class AudiosContainer extends Container<AudiosState> {
 
   setVolume = (volume) => {
     const v = volume / 100;
+    this.setState({ volume: v });
+    this.state.sound.volume(v);
+  }
+
+  volumeChange = (n) => {
+    const v = this.state.sound.volume() + n;
     this.setState({ volume: v });
     this.state.sound.volume(v);
   }

@@ -21,8 +21,6 @@ const buffer3 = fs.readFileSync(path.resolve(__dirname, 'testmedia', 'test-audio
 datauri.format('.ogg', buffer3);
 const OGGaudio64uri = datauri.content;
 
-const url = 'http://someurl.com'
-
 describe('PlayerContainer', () => {
   let ac;
   let sandbox;
@@ -103,6 +101,15 @@ describe('PlayerContainer', () => {
     ac.play(OGGaudio64uri, 5).then(() => {
       expect(ac.state.url).to.equal(OGGaudio64uri);
       expect(ac.state.currentTime).to.equal(5);
+      done();
+    });
+  }, 1000);
+
+  it('should change volume', (done) => {
+    ac.play(FLACaudio64uri, 0).then(() => {
+      expect(ac.state.sound.volume()).to.equal(1);
+      ac.volumeChange(-0.1);
+      expect(ac.state.sound.volume()).to.equal(0.9);
       done();
     });
   }, 1000);

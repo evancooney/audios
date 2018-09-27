@@ -65,7 +65,7 @@ volume: number
 isLoading: boolean
 isPlaying: boolean
 isError: boolean
-html5: boolean
+html5: boolean 
 
 Methods
 --------
@@ -76,6 +76,10 @@ play(url, position = 0, optionalFilename, optionalAudiofileId)
 pause()
 
 seek(timeInSeconds)
+
+setVolume(n)
+
+volumeChange(n)
 
 ## License
 
