@@ -1,6 +1,6 @@
 {
   "name": "audios",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Stateful react components for audio playback on the web",
   "author": "evancooney",
   "license": "MIT",
